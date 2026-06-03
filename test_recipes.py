@@ -61,3 +61,55 @@ def test_scale_error():
     recipe = Recipe("Пицца")
     with pytest.raises(ValueError):
         recipe.scale(0)
+
+
+# Тестирование класса ShoppingList
+#-----------------------------------
+
+def test_add_recipe():
+    recipe = Recipe("Пицца")
+    recipe.add_ingredient(Ingredient("Мука",100,"г"))
+    shopping = ShoppingList()
+    shopping.add_recipe(recipe,2)
+    assert len(shopping._items) == 1
+
+def test_add_recipe_error():
+    shopping = ShoppingList()
+    recipe = Recipe("Пицца")
+    with pytest.raises(ValueError):
+        shopping.add_recipe(recipe,0)
+
+def test_remove_recipe():
+    recipe = Recipe("Пицца")
+    recipe.add_ingredient(Ingredient("Мука",100,"г"))
+    shopping = ShoppingList()
+    shopping.add_recipe(recipe,1)
+    shopping.remove_recipe("Пицца")
+    assert len(shopping._items) == 0
+
+
+def test_get_list():
+    r1 = Recipe("A")
+    r2 = Recipe("B")
+    r1.add_ingredient(Ingredient("Мука",100,"г"))
+    r2.add_ingredient(Ingredient("Мука",50,"г"))
+    shopping = ShoppingList()
+    shopping.add_recipe(r1, 1)
+    shopping.add_recipe(r2, 1)
+    result = shopping.get_list()
+    assert result[0].quantity == 150
+
+
+def test_shopping_list_add():
+    sl1 = ShoppingList()
+    r1 = Recipe("Рецепт 1")
+    r1.add_ingredient(Ingredient("Мука", 100, "г"))
+    sl1.add_recipe(r1, 1)
+    sl2 = ShoppingList()
+    r2 = Recipe("Рецепт 2")
+    r2.add_ingredient(Ingredient("Сахар", 50, "г"))
+    sl2.add_recipe(r2, 1)
+    sl3 = sl1 + sl2
+    assert len(sl3.get_list()) == 2
+    assert len(sl1.get_list()) == 1
+    assert len(sl2.get_list()) == 1
